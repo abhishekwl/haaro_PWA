@@ -111,8 +111,13 @@ class PrimarySearchAppBar extends React.Component {
     mobileMoreAnchorEl: null,
     open: false,
     search_phrase: "",
-    arr_notams: [ "nikhil", "raksha", "abhi", "sadisadas", "sadasd" ]
+    subject_names: [],
+    subjects: {}
   };
+
+  componentDidMount() {
+    this.pullSubjects();
+  }
 
   toggleDrawer() {
     this.setState({
@@ -135,6 +140,18 @@ class PrimarySearchAppBar extends React.Component {
 
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
+  };
+
+  pullSubjects = () => {
+    fetch('http://192.168.137.11:5000/fetch/IND/VOMM/airport')
+    .catch(err => console.log(err))
+    .then(resp => resp.json())
+    .then(resp => {
+      let notams = resp.notams;
+      let subjects = resp.subjects;
+      let subject_names = Object.keys(subjects);
+      this.setState({ subject_names: subject_names, subjects: subjects });
+    });
   };
 
   render() {
@@ -258,7 +275,7 @@ class PrimarySearchAppBar extends React.Component {
               </IconButton>
             </div>
           </Toolbar>
-          <TabLayout search_phrase={this.state.search_phrase} />
+          <TabLayout subjects={this.state.subjects} search_phrase={this.state.search_phrase} subject_names={this.state.subject_names} />
         </AppBar>
         <SwipeableDrawer open={this.state.open} onOpen={this.toggleDrawer.bind(this)} onClose={this.toggleDrawer.bind(this)}>
             <div

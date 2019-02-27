@@ -61,71 +61,83 @@ class RecipeReviewCard extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  componentDidMount() {
+    const subject = this.props.subject;
+    const qStatus = this.props.q_status;
+    const status = this.props.status;
+    const encoded = this.props.encoded;
+    const decoded = this.props.decoded;
+    const startDate = this.props.startdate;
+    const endDate = this.props.enddate;
+    this.setState({ title: status, subtitle: qStatus, content: decoded, desc1: encoded });
+  }
+
   render() {
     const { classes } = this.props;
 
-    return (
-      <Card elevation={12} className={classes.card}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={ this.state.title }
-          subheader={ this.state.subtitle }
-        />
-        <CardContent>
-          {
-            (this.state.content.toLowerCase().includes(this.props.search_phrase))?
-                <Typography component="p">
-                  { this.state.content }
-                </Typography>:
-                <Typography component="p">Unfiltered text</Typography>
-          }
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites" onClick={this.props.onFavouritePress}>
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded,
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label="Show more"
-          >
-            <ExpandMoreIcon />
-          </IconButton>
-        </CardActions>
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+    if(this.state.content.toLowerCase().includes(this.props.search_phrase)) {
+      return (
+        <Card elevation={12} className={classes.card}>
+          <CardHeader
+            avatar={
+              <Avatar aria-label="Recipe" className={classes.avatar}>
+                R
+              </Avatar>
+            }
+            action={
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={ this.state.title }
+            subheader={ this.state.subtitle }
+          />
           <CardContent>
-            <Typography paragraph>Method:</Typography>
-            <Typography paragraph>
-              { this.state.desc1 }
-            </Typography>
-            <Typography paragraph>
-              { this.state.desc2 }
-            </Typography>
-            <Typography paragraph>
-              { this.state.desc3 }
-            </Typography>
-            <Typography>
-              { this.state.desc4 }
-            </Typography>
+            {
+              (this.state.content.toLowerCase().includes(this.props.search_phrase))?
+                  <Typography component="p">
+                    { this.state.content }
+                  </Typography>:null
+            }
           </CardContent>
-        </Collapse>
-      </Card>
-    );
+          <CardActions className={classes.actions} disableActionSpacing>
+            <IconButton aria-label="Add to favorites" onClick={this.props.onFavouritePress}>
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="Share">
+              <ShareIcon />
+            </IconButton>
+            <IconButton
+              className={classnames(classes.expand, {
+                [classes.expandOpen]: this.state.expanded,
+              })}
+              onClick={this.handleExpandClick}
+              aria-expanded={this.state.expanded}
+              aria-label="Show more"
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </CardActions>
+          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography paragraph>Method:</Typography>
+              <Typography paragraph>
+                { this.state.desc1 }
+              </Typography>
+              <Typography paragraph>
+                { this.state.desc2 }
+              </Typography>
+              <Typography paragraph>
+                { this.state.desc3 }
+              </Typography>
+              <Typography>
+                { this.state.desc4 }
+              </Typography>
+            </CardContent>
+          </Collapse>
+        </Card>
+      );
+    } else return null;
   }
 }
 

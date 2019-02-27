@@ -64,23 +64,10 @@ class ChipsArray extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const notamsUnderSubject = this.props.notams;
+
     return (
         <div style={{backgroundColor: "white", paddingLeft: 16, paddingRight: 16, paddingBottom: 128, paddingTop: 8, maxHeight: window.innerHeight, overflow: 'auto'}}>
-            {
-                this.state.chipData.map(data => {
-                let icon = <TagFacesIcon />; //Medhuri or Dhanvi, change this icon later, look it up on @materialui/icons
-                return (
-                        <Chip
-                            key={data.key}
-                            icon={icon}
-                            label={data.label}
-                            onDelete={this.handleDelete(data)}
-                            className={classes.chip}
-                        />
-                    );
-                })
-            }
-
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -109,11 +96,30 @@ class ChipsArray extends React.Component {
 
             <Grid container>
                 <Grid item md={7}>
-                  <CardListItem search_phrase={this.props.search_phrase} onFavouritePress={this.handleClick} />
-                  <CardListItem search_phrase={this.props.search_phrase} onFavouritePress={this.handleClick} />
-                  <CardListItem search_phrase={this.props.search_phrase} onFavouritePress={this.handleClick} />
-                  <CardListItem search_phrase={this.props.search_phrase} onFavouritePress={this.handleClick} />
-                  <CardListItem search_phrase={this.props.search_phrase} onFavouritePress={this.handleClick} />
+                {
+                  notamsUnderSubject.map(notam => {
+                    let subject = notam["Subject"];
+                    let decoded = notam["decoded"];
+                    let qStatus = notam["q_status"];
+                    let status = notam["status_category"];
+                    let encoded = notam["message"];
+                    let startDate = notam["startdate"];
+                    let endDate = notam["enddate"];
+                    return (
+                    <CardListItem
+                        search_phrase={this.props.search_phrase}
+                        onFavouritePress={this.handleClick}
+                        subject={subject}
+                        decoded={decoded}
+                        q_status={qStatus}
+                        status={status}
+                        encoded={encoded}
+                        startdate={startDate}
+                        enddate={endDate}
+                      />
+                    );
+                  })
+                }
                 </Grid>
                 <Grid item md={4} style={ {justifyContent: 'center', alignItems: 'center'} }>
                   <MapWithAMarker
